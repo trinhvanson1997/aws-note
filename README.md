@@ -78,4 +78,66 @@ Create the app from a template provided by AWS CDK -> Add code to the app to cre
   + **Template.fromStack(myStack)**: stack built in CDK
   + **Template.fromString(mystring)**: stack built outside CDK
 
+
+# CloudFormation
+- Infrastructure as Code (IaC)
+- **written in JSON or YAML**
+- **Template have to be uploaded to S3** before CloudFormation create Stack
+- Can't update old template, must upload new version of template
+- Building blocks:
+  + **Resources (mandatory)**: AWS resources declared
+  + Parameters: dynamic input
+  + Mappings: static variables
+  + Outputs: reference to what has been created
+  + Conditional: 
+  + Metadata:
+- Pseudo parameters:
+  + AWS::AccountID
+  + AWS::NotificationARNs
+  + AWS::NoValue
+  + AWS::Region
+  + AWS::StackId
+  + AWS::StackName
+
+- Example Mappings
+```
+Mappings:
+  EnvironmentToInstanceType:
+    development:
+      instanceType: t2.micro
+    production:
+      instanceType: m4.large
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', HVM64]
+```
+
+- **Outputs**:
+  + must be unique within region
+  + output value can be imported into other stack
+  + can't delete CloudFormation if it's outputs are being used by another CloudFormation
+
+- **Intrisic Functions**:
+  + Ref
+  + Fn::GetAtt
+  + Fn::FindInMap
+  + Fn::ImportValue
+  + Fn::Join
+  + Fn::Sub
+  + Condition Functions: Fn::If, Fn::Not, Fn::Equals, ...
+
+- If CF update fails, auto **rollback to previous known working state**
+- **ChangeSet**: used to know what changed before apply
+- **StackSets**: 
+  + create, update or delete stacks **across multiple accounts and regions** with single operations
+  + **need administrator account** to create StackSet
+  + can use trusted accounts to create, update, delete stack instances from StackSet
+- **CloudFormation Drift**: detect changes (drifted) from expected template configuration
+
+
+
+
 ECS?
