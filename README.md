@@ -8,6 +8,7 @@
 - **DDos protection** -> use WAF or Shield
 - to force update content in cache -> use **Cache Invalidation**
 - to get logs -> use Kinesis Data Streams for real-time or Kinesis Data Firehose for near real-time
+- AWS Lambda@Edge is a general-purpose serverless compute feature that supports a wide range of computing needs and customizations. Lambda@Edge is best suited for computationally intensive operations
 
 
 # API Gateway
@@ -44,7 +45,7 @@
 - **unlimited throughput, unlimited number of message** in queue
 - default retention: 4 days, max 14 days
 - use param **DelaySeconds** to wait for processing data after being push
-- **MessageVisibilityTimeout**: after message is polled by consumer, it is invisible to other consumer
+- **MessageVisibilityTimeout**: **default: 30 seconds** after message is polled by consumer, it is invisible to other consumer, range from 0 -> 12h
 - if consumer process too long, it can call **ChangeMessageVisibilityTimout** to get more time
 - **Dead Letter Queue (DLQ)**:
   + use for **DEBUG**
@@ -52,7 +53,8 @@
   + DLQ of **FIFO     queue** must be a **FIFO     queue**
   + DLQ of **standard queue** must be a **standard queue**
 - to **send file with large size** -> use **SQS extended client** (Java library)
-
+- **DeleteQueue**: delete queue and all messages
+- **PurgeQueue**: just remove all messages
 
 # SNS
 - up to **100.000 topics**
@@ -72,7 +74,7 @@
 
 
 # CDK
-- **define cloud infra using programming languagues**: JavaScript, Python, Java, .NET
+- define cloud infra **using programming languagues**: JavaScript, Python, Java, .NET
 - code is **compiled to CloudFormation template**
 - great for Lambda functions
 - great for docker containers in ECS/EKS
@@ -87,6 +89,20 @@ Create the app from a template provided by AWS CDK -> Add code to the app to cre
 - to import a template:
   + **Template.fromStack(myStack)**: stack built in CDK
   + **Template.fromString(mystring)**: stack built outside CDK
+
+# SAM (Serverless Application Model)
+- framework for deploying serverless service
+- **written in YAML**
+- support anything from CloudFormation
+- header indicate SAM: **Transform: 'AWS::Serverless-2016-10-31'**
+- Write code:
+  + AWS::Serverless:Function
+  + AWS::Serverless:Api
+  + AWS::Serverless:SimpleTable
+- Package & Deploy:
+  + **aws cloudformation package / sam package**
+  + **aws cloudformation deploy  / sam deploy**
+- sam build (convert to cloud) -> sam package or aws cloudformation package (package and upload to s3) -> sam deploy or aws cloudformation deploy (create ChangeSet)
 
 
 # CloudFormation
@@ -147,7 +163,95 @@ Resources:
   + can use trusted accounts to create, update, delete stack instances from StackSet
 - **CloudFormation Drift**: detect changes (drifted) from expected template configuration
 
+# ELB
+- **Cross-Zone Load Balancing**: ALB (enabled by default), NLB, GWLB, CLB (disabled by default)
 
 
+# Step Function
+- **model your workflows** as state machine (one per workflow)
+- written in **JSON**
+- **Resource field is a required parameter for Task state**
+- 
+```
+{
+  "Comment": "A Hello World example of the Amazon States Language using Pass states",
+  "StartAt": "Lambda Invoke",
+  "States": {
+    "Lambda Invoke": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "<ENTER FUNCTION NAME HERE>"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Choice State"
+    },
+    "Choice State": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$",
+          "StringMatches": "*Stephane*",
+          "Next": "Is Teacher"
+        }
+      ],
+      "Default": "Not Teacher"
+    },
+    "Is Teacher": {
+      "Type": "Pass",
+      "Result": "Woohoo!",
+      "End": true
+    },
+    "Not Teacher": {
+      "Type": "Fail",
+      "Error": "ErrorCode",
+      "Cause": "Stephane the teacher wasn't found in the output of the Lambda Function"
+    }
+  }
+}
+```
+**PRACTICE WITH STEP FUNCTION**
+**PRACTICE WITH ECS**
+**PRACTICE WITH BEANSTALK**
+**REVIEW SECTION 10**
+**REVIEW SECTION 14**
+**EFS**
+**S3 UPLOAD**
+**Amazon ElasticCache**
 
-ECS?
+**1. How lambda connect to aws service?**
+```
+You can configure a Lambda function to connect to private subnets in a virtual private cloud (VPC) in your account. Use Amazon Virtual Private Cloud (Amazon VPC) to create a private network for resources such as databases, cache instances, or internal services. Connect your lambda function to the VPC to access private resources during execution. When you connect a function to a VPC, Lambda creates an elastic network interface for each combination of the security group and subnet in your function's VPC configuration. This is the right way of giving RDS access to Lambda.
+```
+
+**2. Migrate code from Github to CodeCommit**
+```
+The simplest way to set up connections to AWS CodeCommit repositories is to configure Git credentials for CodeCommit in the IAM console, and then use those credentials for HTTPS connections.
+```
+
+**3. Drift Detection feature in Cloudformation**
+```
+
+```
+
+**4. Query the metadata at http://169.254.169.254/latest/meta-data**
+
+**5. RDS Auto Scaling storage**
+```
+ASG storage is enabled by default in Aurora
+For other RDS, must enabled by hand
+```
