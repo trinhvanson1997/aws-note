@@ -1,4 +1,22 @@
 
+# S3 Security
+4 methods to encrypt objects in s3 bucket
+- **SSE-S3**:
+  + use **keys handled, owned by AWS**
+  + encryption type: **AES-256**
+  + **x-amx-server-side-encryption: "AES-256"** header
+  + **enabled by default** for new buckets and objects
+- **SSE-KMS**:
+  + **keys handled, managed by KMS**
+  + **x-amz-server-side-encryption: "aws:kms"** header
+  + **limitation**: can be impacted by **KMS Limit** -> can request quota increase
+- **SSE-C**:
+  + **keys managed by customer** outside of AWS
+  + **ONLY HTTPS**
+  + keys **must provided in header for every request**
+
+- **Client-side encryption**
+
 # CloudFront
 - to improve performance for global audience -> use CloudFront instead of S3 Bucket
 - **signed-URL**: give access to one file
@@ -35,6 +53,28 @@
   + Integration latency: time between -> backend + <- backend
   + Latency: time between from client + to client
 
+# Beanstalk
+- Many web apps have the same architecture (3-tier) ALB+ASG+RDS
+- components:
+  + **Application**: collection of components (environments, versions,...)
+  + **Application version**: an iteration of application code, **up to 1000 versions**
+  + **Environment**: collection of resources running an application version (only one application version at a time)
+- deployment modes:
+  + **All at one**
+  + **Rolling**
+  + **Rolling with additional batch**
+  + **Immutable**: deploy in new temp ASG, merge temp ASG to current ASG
+  + **Traffic splitting (canary test)**
+  + **Blue/green**
+- Beanstalk extensions:
+  + add **.ebextensions/ directory** in root of source code
+  + YAML/JSON format
+  + .config extension (eg. logging.config)
+  + able to modify some default settings or add resources (RDS, ElastiCache,...)
+- **Beanstalk migration**:
+  + After create environment, you cannot change ELB type
+  + **to migrate**: create new env with same config except LB
+  + **to decouple RDS**: create snapshot for RDS DB -> turn on protect RDS from deletion, 
 
 # Kinesis vs SQS
 - AWS recommends using Amazon SQS for cases where individual message fail/success are important, message delays are needed and there is only one consumer for the messages received (if more than one consumers need to consume the message, then AWS suggests configuring more queues)
