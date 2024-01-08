@@ -11,8 +11,8 @@
 
 
 # API Gateway
-- **max API gateway concurrency: 10.000**
-- APIS -> resources (/, /home) -deploy to-> stages (dev, prod, ...) 
+- **max API gateway concurrency: 10.000 rps** > **Account level throttling: 5000 rps**
+- When your API's resources receive requests from a domain other than the API's own domain and you want to restrict servicing these requests, you must disable cross-origin resource sharing (CORS) for selected methods on the resource
 - ${stageVariables.lambdaAlias} 
 - 3 ways to deploy:
   + **edge optimized**: for global clients, requests are routed through CloudFront Edge Locations
@@ -56,13 +56,23 @@
 
 # SNS
 - up to **100.000 topics**
+- up to **12.500.000 subscriptions per topic**
 - event producer only send message to one topic
+- subscriber can be: **SQS, Lambda, Kinesis Data Firehose**
 - Fan-out pattern
 - **Mesage Filtering**: use Filter Policy to send specific message to consumer
+- Encryption:
+  + in-flight encryption with HTTPS API
+  + At-rest encryption with KMS keys
+  + client-side encryption
+- Access Controls: IAM policy to regulate access to SNS API
+- SNS Access Policies: similar to s3 bucket policy
+  + useful for cross-account access to SNS topic
+  + allow other services (s3, ...) write to topic
 
 
 # CDK
-- **define clound infra using programming languagues**: JavaScript, Python, Java, .NET
+- **define cloud infra using programming languagues**: JavaScript, Python, Java, .NET
 - code is **compiled to CloudFormation template**
 - great for Lambda functions
 - great for docker containers in ECS/EKS
