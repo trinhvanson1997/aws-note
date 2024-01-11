@@ -7,3 +7,21 @@ AWS requires approximately 5 weeks of usage data to generate budget forecasts
 
 - Cognito User Pool
 - Cognito Identity Pool
+
+lambda function reserved concurrency vs provisioned concurrency
+how lambda can write to dynamodb
+
+
+header in ALB that forward client IP
+
+stepfunction state machine vs activity purpose 
+
+s3 bucket replication
+
+how ec2 access s3
+
+cloudwatch log, event, 
+
+elastic cache for redis and memcache
+
+
