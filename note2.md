@@ -4,3 +4,6 @@ AWS requires approximately 5 weeks of usage data to generate budget forecasts
 - DynamoDB Secondary Indexes:
   + Global secondary index (GSI): an index with partition key and sort key different from base table
   + Local secondary index (LSI): an index that has same partitiion key as base table, but a different sort key
+
+- Cognito User Pool
+- Cognito Identity Pool
