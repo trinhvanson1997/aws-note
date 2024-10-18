@@ -29,4 +29,11 @@
 
 ## Polynomal transform
 Synthetic features can be created to model non-linear relationships between two features. These synthetic features can then be used as inputs to a linear model to enable it to represent nonlinearities.
-  
+
+## Categorical data
+**Categorical data** has a _specific set_ of possible values. For example:
+- The different species of animals in a national park
+- The names of streets in a particular city
+- Whether or not an email is spam
+
+
