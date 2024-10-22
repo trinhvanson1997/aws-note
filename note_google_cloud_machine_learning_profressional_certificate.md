@@ -30,6 +30,17 @@
 ## Polynomal transform
 Synthetic features can be created to model non-linear relationships between two features. These synthetic features can then be used as inputs to a linear model to enable it to represent nonlinearities.
 
+## synthetic feature
+A feature not present among the input features, but assembled from one or more of them. Methods for creating synthetic features include the following:  
+  - Bucketing a continuous feature into range bins.  
+  - Creating a feature cross.  
+  - Multiplying (or dividing) one feature value by other feature value(s) or by itself. For example, if a and b are input features, then the following are examples of synthetic features:  
+    + a*b  
+    + a^2  
+  - Applying a transcendental function to a feature value. For example, if c is an input feature, then the following are examples of synthetic features:  
+    + sin(c)  
+    + ln(c)  
+
 ## Categorical data
 **Categorical data** has a _specific set_ of possible values. For example:
 - The different species of animals in a national park
