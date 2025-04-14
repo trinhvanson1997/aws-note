@@ -200,6 +200,7 @@ spec:
 
 # # RBAC, Role binding: HARD
 - https://killercoda.com/killer-shell-cks/scenario/rbac-serviceaccount-permissions
+- RBAC explain: https://www.youtube.com/watch?v=iE9Qb8dHqWI
 
 
 # Enable ETCD Encryption
@@ -235,13 +236,13 @@ resources:
 
 # affinity, antiAffinity
 
-# upgrade cluster
+# upgrade cluster: OK
 https://www.youtube.com/watch?v=e0eoEXSkpQY&list=PLpbwBK0ptssx38770vYNwZEuCeGNw54CH&index=13
 
-# NetworkPolicy
+# NetworkPolicy: OK
 
 
-# trivy 
+# trivy: OK
 
 # apiserver misconfigured
 
