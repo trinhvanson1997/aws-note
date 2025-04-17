@@ -4,8 +4,15 @@
 - check status : `service falco status`
 - check log: tail -f /var/log/syslog | grep falco
 
-# seccomp?
-
+# Read the complete Secret content directly from ETCD
+```
+ETCDCTL_API=3 etcdctl \
+--cert /etc/kubernetes/pki/apiserver-etcd-client.crt \
+--key /etc/kubernetes/pki/apiserver-etcd-client.key \
+--cacert /etc/kubernetes/pki/etcd/ca.crt \
+[--etcd-servers https://127.0.0.1:2379 \]               # optional
+get /registry/secrets/team-green/database-access
+```
 # AppArmor
 - Check status:  `apparmor_status`
 - Apply profile: `apparmor_parser /root/profile`
