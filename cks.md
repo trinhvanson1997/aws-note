@@ -13,6 +13,15 @@ ETCDCTL_API=3 etcdctl \
 [--etcd-servers https://127.0.0.1:2379 \]               # optional
 get /registry/secrets/team-green/database-access
 ```
+
+# Get secret from restricted pod
+```
+ls /run/secrets/kubernetes.io/serviceaccount
+# ca.crt     namespace  token
+
+curl https://kubernetes.default/api/v1/namespaces/restricted/secrets -H "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)" -k
+```
+
 # AppArmor
 - Check status:  `apparmor_status`
 - Apply profile: `apparmor_parser /root/profile`
