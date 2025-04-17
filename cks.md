@@ -48,7 +48,8 @@ echo "66e1194d1ef2886bd30a0617a938732af1b5e9f70fcf5607e178c9b4431935bfada519f70c
 
 # CIS Benchmark
 - print all benchmark: `kube-bench`
-- only master node: `kube-bench run --targets master`
+- only master node: `kube-bench run --targets=master`
+- only worker node: `kube-bench run --targets=node`
 - view only one result: `kube-bench run --targets master --check 1.2.15`
 
 # Audit Logging
