@@ -2,7 +2,12 @@
 - config rule file at: `/etc/falco/falco_rules.yaml`
 - apply changes: `service falco restart`
 - check status : `service falco status`
-- check log: tail -f /var/log/syslog | grep falco
+- check log:
+```
+falco -U | grep ...
+or
+tail -f /var/log/syslog | grep falco
+```
 
 # Read the complete Secret content directly from ETCD
 ```
@@ -140,25 +145,30 @@ https://killercoda.com/killer-shell-cks/scenario/static-manual-analysis-k8s
 https://killercoda.com/killer-shell-cks/scenario/immutability-readonly-fs
 What is different?
 ```
-#1
+#1 container level
 securityContext:
     privileged: true
 
-#2
+#2 pod and container level
 securityContext:
     runAsNonRoot: true
     runAsUser: 10001
 
-#3
+#3 container level
 securityContext:
     capabilities:
     drop: []
     allowPrivilegeEscalation: true
 
-#4
+#4 container level
 securityContext:
     readOnlyRootFilesystem: true
 
+#5 pod and container level
+securityContext:
+  appArmorProfile:
+    localhostProfile: docker-default
+    type: Localhost
 -> If you want to write file, mount emptyDir
 ```
 
@@ -259,8 +269,6 @@ https://www.youtube.com/watch?v=e0eoEXSkpQY&list=PLpbwBK0ptssx38770vYNwZEuCeGNw5
 # NetworkPolicy: OK
 
 
-# trivy: OK
-
 # apiserver misconfigured
 
 # noderestriction
@@ -288,4 +296,22 @@ strace kill -9 1234 2>&1 | grep 1234
 # strace with PID
 strace -p 19890 [-f] [-cw] # use your PID, we use -f for "follow forks", -cw for count and summarize
 
+```
+
+# TRIVY, SBOM
+```
+# check image contain the vulnerabilities CVE-2020-10878 or CVE-2020-1967
+trivy image <image> | grep -E 'CVE-2020-10878|CVE-2020-1967'
+
+# bom: Generate a SPDX-Json SBOM of image
+bom generate --format json      --output sbom1.json --image registry.k8s.io/kube-apiserver:v1.31.0 
+
+# trivy: Generate a CycloneDX SBOM of image
+trivy image  --format cyclonedx --output sbom2.json registry.k8s.io/kube-controller-manager:v1.31.0
+
+# trivy: Scan the existing SPDX-Json SBOM
+trivy sbom   --format json      --output sbom_check_result.json /opt/course/18/sbom_check.json
+
+=> 
+[bom/trivy] --format ... --output ... input_file
 ```
