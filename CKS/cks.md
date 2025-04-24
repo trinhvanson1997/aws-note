@@ -35,6 +35,19 @@ curl https://kubernetes.default/api/v1/namespaces/restricted/secrets -H "Authori
 # Seccomp
 Restrict container's syscall
 
+By default, there are some privileges that are granted to container, you can add or drop privileges
+```yaml
+# sample capabilities
+spec:
+  containers:
+  - name: sec-ctx-4
+    image: gcr.io/google-samples/hello-app:2.0
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+        drop: ["CHOWN"]
+```
+
 # AppArmor
 Restrict access to resources (files, directories, ...)
 
