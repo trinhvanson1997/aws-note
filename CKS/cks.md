@@ -354,24 +354,3 @@ trivy sbom   --format json      --output sbom_check_result.json /opt/course/18/s
 [bom/trivy] --format ... --output ... input_file
 ```
 
-
-
-CONCENTRATE
-
-config audit logging policy.yaml  metadata response
-image policy webhook 
-mount token trong /var/run/secret/.../serviceaccount
-pod security standards: Privileged, baseline, restricted
-security context
-
-
-# seccomp https://kubernetes.io/docs/tutorials/security/seccomp
-
-# falco log to file
-
-# image webhook policy https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/
-We need to make sure that when pods are created in this cluster, they cannot use the latest image tag, irrespective of the repository being used.
-
-To achieve this, a simple Admission Webhook Server has been developed and deployed. A service called image-bouncer-webhook is exposed in the cluster internally. This Webhook server ensures that the developers of the team cannot use the latest image tag. Make use of the following specs to integrate it with the cluster using an ImagePolicyWebhook:
-
-kube-apiserver (with admission-config-file param and admisison-plugins=ImagePolicyWebhook) ->AdmissionConfiguration -> kubeconfig -> service webhook backend (contains rules)
